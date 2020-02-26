@@ -94,8 +94,10 @@ macro_rules! status_responder {
 
 status_responder!(Accepted, 202);
 status_responder!(Created, 201);
+status_responder!(NoContent, 204);
 status_responder!(BadRequest, 400);
 status_responder!(NotFound, 404);
+status_responder!(Unavailable, 504);
 
 macro_rules! response_content_wrapper {
     ($responder: ident, $mime: literal) => {
