@@ -78,6 +78,25 @@ impl<'r, T: OpenApiResponder<'r>> OpenApiResponder<'r> for Option<T> {
     }
 }
 
+macro_rules! status_responder_2 {
+    ($responder: ident, $status: literal) => {
+        impl<'r, T: OpenApiResponder<'r>> OpenApiResponder<'r>
+            for rocket::http::Status::$responder
+        {
+            fn responses(gen: &mut OpenApiGenerator) -> Result {
+                let mut responses = T::responses(gen)?;
+                set_status_code(&mut responses, $status)?;
+                Ok(responses)
+            }
+        }
+    };
+}
+
+status_responder_2!(NoContent, 204);
+status_responder_2!(Forbidden, 403);
+status_responder_2!(UriTooLong, 414);
+
+
 macro_rules! status_responder {
     ($responder: ident, $status: literal) => {
         impl<'r, T: OpenApiResponder<'r>> OpenApiResponder<'r>
